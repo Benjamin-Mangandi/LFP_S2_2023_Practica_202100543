@@ -1,13 +1,31 @@
 #Funcion Cargar Inventario
 def cargar_inventario():
-    print("sis")
+    inventario = open("Prueba.INV", 'r')
+    datos = inventario.read()
+    inventario.close()
+    print (datos)
     return
+
+def cargar_movimientos():
+    print("segundo")
+    return
+
+def crear_informe():
+    print("Tercero")
+    return
+
 
 #Funcion Para elegir las opciones
 def elegir_opcion(numero):
     if numero == 1:
         cargar_inventario()
         return
+    elif numero == 2:
+        cargar_movimientos()
+        return numero
+    elif numero == 3:
+        crear_informe()
+        return numero
     elif numero == 4:
         print("¡Hasta Luego!")
         return numero
@@ -15,7 +33,8 @@ def elegir_opcion(numero):
 #Inicio de la ejecución
 respuesta = 0
 while respuesta != 4:
-    print("--------Practica 1 Lneguajes Formales y de programación-------")
+    print("  ")
+    print("--------Practica 1 Lenguajes Formales y de programación-------")
     print("Sistema de Inventario:")
     print("Para Acceder a cada una, ingrese el numero correspondiente.")
     print("1. Cargar Inventario Inicial")
