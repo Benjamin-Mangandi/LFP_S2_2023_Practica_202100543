@@ -1,7 +1,7 @@
+import os
 inventario_final = []
 
 # Funcion Cargar Inventario
-
 
 def convertir_numericos(datos_inventario):
     # Arreglo con movimientos
@@ -36,59 +36,73 @@ def convertir_numericos(datos_inventario):
 
 
 def cargar_inventario(datos_inventario, nombre_archivo):
-    inventario = open(nombre_archivo, 'r')
-    for linea in inventario:
-        aux_separar_lineas = linea.split(" ")
-        aux_separar_datos = aux_separar_lineas[1]
-        aux_datos_finales = aux_separar_datos.split(";")
-        datos_inventario.append(aux_datos_finales)
-    convertir_numericos(datos_inventario)
-    print("¡Datos cargados con exito!")
-    print(datos_inventario)
-    return
+    if os.path.exists(nombre_archivo):  # Valida si el archivo existe
+        extension = os.path.splitext(nombre_archivo)
+        extension_deseada = ".inv"
+        if extension[1] == extension_deseada:  # Valida si tiene la extension correcta
+            inventario = open(nombre_archivo, 'r')
+            for linea in inventario:
+                aux_separar_lineas = linea.split(" ")  # Separar instruccion
+                aux_separar_datos = aux_separar_lineas[1]
+                aux_datos_finales = aux_separar_datos.split(";")  # Separar datos
+                datos_inventario.append(aux_datos_finales)
+            convertir_numericos(datos_inventario)
+            print("\n¡Datos cargados con exito!")
+        else:
+            print("\nEl formato del archivo no es .inv, intentelo de nuevo.")
+    else:
+        print("\nNo existe el archivo, intentelo de nuevo.")
 
 
 def cargar_movimientos(datos_inventario, nombre_archivo):
-    inventario = open(nombre_archivo, 'r')
-    materiales_agregar = []
-    for linea in inventario:
-        aux_separar_lineas = linea.split(" ")
-        instruccion = aux_separar_lineas[0]
-        aux_separar_datos = aux_separar_lineas[1]
-        aux_datos_finales = aux_separar_datos.split(";")
-        aux_datos_finales.insert(0, instruccion)
-        materiales_agregar.append(aux_datos_finales)
-    convertir_numericos(materiales_agregar)
-    print(materiales_agregar)
-    for materiales in range(len(materiales_agregar)):
-        for Bodegas in range(len(datos_inventario)):
-            if materiales_agregar[materiales][0] == "agregar_stock":
-                if datos_inventario[Bodegas][3] == materiales_agregar[materiales][3]:
-                    if datos_inventario[Bodegas][0] == materiales_agregar[materiales][1]:
-                        nueva_cantidad = datos_inventario[Bodegas][1] + materiales_agregar[materiales][2]
-                        datos_inventario[Bodegas][1] = nueva_cantidad
-                        break
-                    else:
-                        print("Lo sentimos, pero el producto: " + materiales_agregar[materiales][1] +
-                        "No existe en: " + datos_inventario[Bodegas][3])
-                        break
-            elif materiales_agregar[materiales][0] == "vender_producto":
-                if datos_inventario[Bodegas][3] == materiales_agregar[materiales][3]:
-                    if datos_inventario[Bodegas][0] == materiales_agregar[materiales][1]:
-                        nueva_cantidad = datos_inventario[Bodegas][1] - materiales_agregar[materiales][2]
-                        if nueva_cantidad < 0:
-                            print("La venta sobrepasa los productos existentes")
-                            break
-                        else:
-                            datos_inventario[Bodegas][1] = nueva_cantidad
-                            break
-                    else:
-                        print("Lo sentimos, pero el producto: " + materiales_agregar[materiales][1] +
-                        " No existe en: " + datos_inventario[Bodegas][3])
-                        break
-
-    print("Inventario actualizado con exito")
-    return
+    if os.path.exists(nombre_archivo):
+        extension = os.path.splitext(nombre_archivo)
+        extension_deseada = ".mov"
+        if extension[1] == extension_deseada:
+            inventario = open(nombre_archivo, 'r')
+            materiales_agregar = []
+            for linea in inventario:
+                aux_separar_lineas = linea.split(" ")
+                instruccion = aux_separar_lineas[0]
+                aux_separar_datos = aux_separar_lineas[1]
+                aux_datos_finales = aux_separar_datos.split(";")
+                aux_datos_finales.insert(0, instruccion)
+                materiales_agregar.append(aux_datos_finales)
+            convertir_numericos(materiales_agregar)
+            for materiales in range(len(materiales_agregar)):
+                for Bodegas in range(len(datos_inventario)):
+                    if materiales_agregar[materiales][0] == "agregar_stock":
+                        if datos_inventario[Bodegas][3] == materiales_agregar[materiales][3]:
+                            if datos_inventario[Bodegas][0] == materiales_agregar[materiales][1]:
+                                nueva_cantidad = datos_inventario[Bodegas][1] + materiales_agregar[materiales][2]
+                                datos_inventario[Bodegas][1] = nueva_cantidad
+                                break
+                            else:
+                                print("\nLo sentimos, pero el producto: " + materiales_agregar[materiales][1] +
+                                      "No existe en " + datos_inventario[Bodegas][3])
+                                break
+                    elif materiales_agregar[materiales][0] == "vender_producto":
+                        if datos_inventario[Bodegas][3] == materiales_agregar[materiales][3]:
+                            if datos_inventario[Bodegas][0] == materiales_agregar[materiales][1]:
+                                nueva_cantidad = datos_inventario[Bodegas][1] - \
+                                    materiales_agregar[materiales][2]
+                                if nueva_cantidad < 0:
+                                    print(
+                                        "\nLa venta de "+materiales_agregar[materiales][1] + " sobrepasa los productos existentes")
+                                    break
+                                else:
+                                    datos_inventario[Bodegas][1] = nueva_cantidad
+                                    break
+                            else:
+                                print("\nLo sentimos, pero el producto: " + materiales_agregar[materiales][1] +
+                                      " No existe en " + datos_inventario[Bodegas][3])
+                                break
+            print("\nInventario actualizado con exito")
+            return
+        else:
+            print("\nEl formato del archivo no es .mov, intentelo de nuevo.")
+    else:
+        print("\nEl archivo no existe, intentelo de nuevo.")
 
 # Funcion para hacer el archivo txt
 
